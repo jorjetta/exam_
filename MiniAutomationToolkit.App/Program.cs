@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using MiniAutomationToolkit.Core;
 using MiniAutomationToolkit.Core.Configuration;
 using MiniAutomationToolkit.Core.Extensions;
@@ -5,6 +6,7 @@ using MiniAutomationToolkit.Core.Helpers;
 using MiniAutomationToolkit.Core.Models;
 using MiniAutomationToolkit.Core.Pages;
 using MiniAutomationToolkit.Core.Services;
+using MiniAutomationToolkit.Core.Simulations;
 
 Console.WriteLine(ToolkitInfo.StartupMessage);
 Console.WriteLine();
@@ -187,6 +189,19 @@ foreach (string? url in urls)
 
     Console.WriteLine($"{url ?? "<null>"} -> {hasHttpScheme}");
 }
+
+Console.WriteLine();
+
+// Задание 8. Имитация длительной операции
+Console.WriteLine("=== Long operation ===");
+
+LongOperationSimulator simulator = new LongOperationSimulator();
+
+Stopwatch stopwatch = Stopwatch.StartNew();
+string asyncResult = await simulator.LongOperationAsync();
+stopwatch.Stop();
+
+Console.WriteLine($"Async result: {asyncResult}, elapsed: {stopwatch.ElapsedMilliseconds} ms");
 
 static void CheckUrlsAreUnique(List<BasePage> pages)
 {
