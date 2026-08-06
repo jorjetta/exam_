@@ -1,4 +1,5 @@
 using MiniAutomationToolkit.Core;
+using MiniAutomationToolkit.Core.Configuration;
 using MiniAutomationToolkit.Core.Helpers;
 using MiniAutomationToolkit.Core.Models;
 using MiniAutomationToolkit.Core.Pages;
@@ -127,6 +128,42 @@ try
     CheckUrlsAreUnique(pagesWithDuplicate);
 }
 catch (InvalidOperationException ex)
+{
+    Console.WriteLine("Error: " + ex.Message);
+}
+
+Console.WriteLine();
+
+// Задание 6. Умная конфигурация
+Console.WriteLine("=== App config ===");
+
+string configPath = Path.Combine(AppContext.BaseDirectory, "data", "appsettings.txt");
+AppConfig config = new AppConfig(configPath);
+
+string baseUrl = config.GetSetting<string>("baseUrl");
+int timeout = config.GetSetting<int>("timeout");
+bool headless = config.GetSetting<bool>("headless");
+int retryCount = config.GetSetting<int>("retryCount");
+
+Console.WriteLine("baseUrl: " + baseUrl);
+Console.WriteLine("timeout: " + timeout);
+Console.WriteLine("headless: " + headless);
+Console.WriteLine("retryCount: " + retryCount);
+
+try
+{
+    config.GetSetting<string>("missingKey");
+}
+catch (KeyNotFoundException ex)
+{
+    Console.WriteLine("Error: " + ex.Message);
+}
+
+try
+{
+    config.GetSetting<int>("baseUrl");
+}
+catch (InvalidDataException ex)
 {
     Console.WriteLine("Error: " + ex.Message);
 }
