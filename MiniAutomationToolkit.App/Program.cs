@@ -203,6 +203,36 @@ stopwatch.Stop();
 
 Console.WriteLine($"Async result: {asyncResult}, elapsed: {stopwatch.ElapsedMilliseconds} ms");
 
+Console.WriteLine();
+
+// Задание 9. Логгер ошибок
+Console.WriteLine("=== Error logger ===");
+
+string dataDirectory = Path.Combine(AppContext.BaseDirectory, "data");
+string inputFilePath = Path.Combine(dataDirectory, "input.txt");
+string missingFilePath = Path.Combine(dataDirectory, "missing.txt");
+string logFilePath = Path.Combine(dataDirectory, "errors.log");
+
+ErrorLogger logger = new ErrorLogger();
+
+string? inputContent = logger.TryReadFile(inputFilePath, logFilePath);
+
+if (inputContent != null)
+{
+    Console.WriteLine("input.txt content:");
+    Console.WriteLine(inputContent.TrimEnd());
+}
+
+string? missingContent = logger.TryReadFile(missingFilePath, logFilePath);
+
+if (missingContent == null)
+{
+    Console.WriteLine("missing.txt was not read, see the log below.");
+}
+
+Console.WriteLine("errors.log content:");
+Console.WriteLine(File.ReadAllText(logFilePath).TrimEnd());
+
 static void CheckUrlsAreUnique(List<BasePage> pages)
 {
     List<string> duplicateUrls = pages
