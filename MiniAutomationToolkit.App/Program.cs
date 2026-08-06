@@ -75,6 +75,44 @@ catch (FileNotFoundException ex)
     Console.WriteLine("Search failed: " + ex.Message);
 }
 
+Console.WriteLine();
+
+// Задание 4. Неизменяемый пользователь
+Console.WriteLine("=== User DTO ===");
+
+UserDto user = new UserDto("Alex Smith", "alex@example.com");
+Console.WriteLine("Created: " + user);
+
+// Свойства только для чтения: раскомментированная строка ниже не компилируется.
+// user.Name = "Bob";
+Console.WriteLine("Name after creation: " + user.Name);
+
+UserDto sameUser = new UserDto("Alex Smith", "alex@example.com");
+Console.WriteLine("Objects are equal: " + user.Equals(sameUser));
+
+UserDto otherUser = new UserDto("Bob Jones", "bob@example.com");
+Console.WriteLine("Objects are equal: " + user.Equals(otherUser));
+
+Console.WriteLine();
+
+TryCreateUser("", "alex@example.com");
+TryCreateUser("Alex Smith", "");
+TryCreateUser("Alex Smith", "alex.example.com");
+TryCreateUser("Alex Smith", "alex smith@example.com");
+
+static void TryCreateUser(string name, string email)
+{
+    try
+    {
+        UserDto created = new UserDto(name, email);
+        Console.WriteLine("Created: " + created);
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine("Error: " + ex.Message);
+    }
+}
+
 static void PrintDiscount(decimal amount, ClientType clientType)
 {
     decimal discount = DiscountCalculator.CalculateDiscount(amount, clientType);
