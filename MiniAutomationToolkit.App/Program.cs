@@ -1,5 +1,6 @@
 using MiniAutomationToolkit.Core;
 using MiniAutomationToolkit.Core.Configuration;
+using MiniAutomationToolkit.Core.Extensions;
 using MiniAutomationToolkit.Core.Helpers;
 using MiniAutomationToolkit.Core.Models;
 using MiniAutomationToolkit.Core.Pages;
@@ -166,6 +167,25 @@ try
 catch (InvalidDataException ex)
 {
     Console.WriteLine("Error: " + ex.Message);
+}
+
+Console.WriteLine();
+
+// Задание 7. Расширяем возможности строк
+Console.WriteLine("=== String extensions ===");
+
+List<string?> urls = new List<string?>();
+urls.Add("https://google.com");
+urls.Add("http://example.org");
+urls.Add("ftp://files.example.com");
+urls.Add(null);
+urls.Add("HTTPS://SITE.EXAMPLE.COM");
+
+foreach (string? url in urls)
+{
+    bool hasHttpScheme = url.HasHttpScheme();
+
+    Console.WriteLine($"{url ?? "<null>"} -> {hasHttpScheme}");
 }
 
 static void CheckUrlsAreUnique(List<BasePage> pages)
