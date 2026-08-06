@@ -1,6 +1,7 @@
 using MiniAutomationToolkit.Core;
 using MiniAutomationToolkit.Core.Helpers;
 using MiniAutomationToolkit.Core.Models;
+using MiniAutomationToolkit.Core.Pages;
 using MiniAutomationToolkit.Core.Services;
 
 Console.WriteLine(ToolkitInfo.StartupMessage);
@@ -99,6 +100,52 @@ TryCreateUser("", "alex@example.com");
 TryCreateUser("Alex Smith", "");
 TryCreateUser("Alex Smith", "alex.example.com");
 TryCreateUser("Alex Smith", "alex smith@example.com");
+
+Console.WriteLine();
+
+// Задание 5. Базовая страница
+Console.WriteLine("=== Pages ===");
+
+List<BasePage> pages = new List<BasePage>();
+pages.Add(new LoginPage());
+pages.Add(new HomePage());
+
+foreach (BasePage page in pages)
+{
+    page.Load();
+}
+
+CheckUrlsAreUnique(pages);
+
+List<BasePage> pagesWithDuplicate = new List<BasePage>();
+pagesWithDuplicate.Add(new LoginPage());
+pagesWithDuplicate.Add(new HomePage());
+pagesWithDuplicate.Add(new LoginPage());
+
+try
+{
+    CheckUrlsAreUnique(pagesWithDuplicate);
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine("Error: " + ex.Message);
+}
+
+static void CheckUrlsAreUnique(List<BasePage> pages)
+{
+    List<string> duplicateUrls = pages
+        .GroupBy(page => page.Url)
+        .Where(group => group.Count() > 1)
+        .Select(group => group.Key)
+        .ToList();
+
+    if (duplicateUrls.Any())
+    {
+        throw new InvalidOperationException("Duplicate page URLs found: " + string.Join(", ", duplicateUrls));
+    }
+
+    Console.WriteLine("All page URLs are unique.");
+}
 
 static void TryCreateUser(string name, string email)
 {
