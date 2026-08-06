@@ -5,6 +5,7 @@ using MiniAutomationToolkit.Core.Extensions;
 using MiniAutomationToolkit.Core.Helpers;
 using MiniAutomationToolkit.Core.Models;
 using MiniAutomationToolkit.Core.Pages;
+using MiniAutomationToolkit.Core.Repositories;
 using MiniAutomationToolkit.Core.Services;
 using MiniAutomationToolkit.Core.Simulations;
 
@@ -232,6 +233,38 @@ if (missingContent == null)
 
 Console.WriteLine("errors.log content:");
 Console.WriteLine(File.ReadAllText(logFilePath).TrimEnd());
+
+Console.WriteLine();
+
+// Задание 11. Склад товаров
+Console.WriteLine("=== Products ===");
+
+string productsFilePath = Path.Combine(AppContext.BaseDirectory, "data", "products.csv");
+List<Product> products = ProductRepository.LoadFromCsv(productsFilePath);
+
+Console.WriteLine("Products loaded: " + products.Count);
+
+PrintAffordableProducts(products, ProductCategory.Food, 10);
+PrintAffordableProducts(products, ProductCategory.Food, 1);
+
+static void PrintAffordableProducts(List<Product> products, ProductCategory category, decimal maxPrice)
+{
+    List<string> names = ProductRepository.GetAffordableProducts(products, category, maxPrice);
+
+    Console.WriteLine($"{category} under {maxPrice}:");
+
+    if (!names.Any())
+    {
+        Console.WriteLine("No products found.");
+
+        return;
+    }
+
+    foreach (string name in names)
+    {
+        Console.WriteLine("- " + name);
+    }
+}
 
 static void CheckUrlsAreUnique(List<BasePage> pages)
 {
